@@ -1,17 +1,16 @@
-// disk cache implementation for the internet
-package cache
+// disk common implementation for the internet
+package common
 
 import (
-	//"fmt"
-	"strings"
-	"time"
-	"net/url"
-	"regexp"
-	"path/filepath"
-	"path"
-	"os"
 	"encoding/json"
 	"io/ioutil"
+	"net/url"
+	"os"
+	"path"
+	"path/filepath"
+	"regexp"
+	"strings"
+	"time"
 )
 
 
@@ -46,6 +45,15 @@ func urlToPath(_url string, cache DiskCache) string {
 }
 
 
+func hasExpired(timestamp time.Time, cache DiskCache) bool {
+	// return whether this timestamp has expires.
+	if cache.Expires == -1 {
+		return false
+	}
+	return time.Now().After(timestamp.Add(cache.Expires))
+
+}
+
 func Set(_url string, x string, cache DiskCache) {
 	filePath := urlToPath(_url, cache)
 	dir, _ := path.Split(filePath)
@@ -78,31 +86,3 @@ func Get(_url string, cache DiskCache) map[string]string {
 	}
 	return dat
 }
-
-
-func hasExpired(timestamp time.Time, cache DiskCache) bool {
-	// return whether this timestamp has expires.
-	if cache.Expires == -1 {
-		return false
-	}
-	return time.Now().After(timestamp.Add(cache.Expires))
-
-}
-
-
-//func main()  {
-//	_url := "https://www.geeksforgeeks.org/filepath-join-function-in-golang-with-examples/2"
-//
-//	dc := DiskCache{dir: "F:/godata", expires: time.Hour * 1}
-//	dat := get(_url, dc)
-//	if len(dat) == 0 {
-//		fmt.Println("cache does not exist or expired")
-//		set(_url, "data to marshal", dc)
-//
-//	} else {
-//		fmt.Println(dat)
-//	}
-//
-//}
-
-

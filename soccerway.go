@@ -1,95 +1,24 @@
 package main
 
 import (
-	"bytes"
+	"encoding/csv"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"io"
-	"io/ioutil"
-	"net/http"
+	"gosrc/common"
 	"os"
 	"strings"
 	"time"
-	//"regexp"
-	"encoding/csv"
-	"gosrc/cache"
 )
+
+
+var Header = []string{}
+const homepage = "https://www.footywire.com/afl/footy/"
+
 
 func check(e error) {
 	if e != nil {
 		panic(e)
 	}
-}
-
-//def __call__(self, url, headers=None):
-//    ''' sometimes dynamic header key such as Referer is required
-//    '''
-//    result = None
-//    if self.cache:
-//        try:
-//            result = self.cache[url]
-//        except KeyError:
-//            # url is not available in cache
-//            pass
-//        else:
-//            code = result['code'] or 0  # Selenium returns `None` for code
-//            if self.num_retries > 0 and 500 <= code < 600:
-//                # server error so ignore result from cache and re-download
-//                result = None
-//
-//    if result is None:
-//        # result was not loaded from cache so still need to download
-//        self.throttle.wait(url)
-//        headers_ = {'User-agent': self.user_agent}
-//        if headers:
-//            headers_.update(headers)
-//        result = self.download(url, headers_, self.proxies, self.num_retries, selenium=self.selenium)
-//        if self.cache:
-//            # save result to cache
-//            self.cache[url] = result
-//    return result['html']  # note, don't convert to str() because unicode chars get removed
-
-func fetchUrl(url string, c cache.DiskCache) io.Reader {
-	// check if cache exists
-	res := cache.Get(url, c)
-	if len(res) == 0 {
-		resp, err := http.Get(url)
-		check(err)
-		b, _ := ioutil.ReadAll(resp.Body)
-		s := string(b)
-		cache.Set(url, s, c)
-		defer resp.Body.Close()
-		return bytes.NewReader(b)
-
-	} else {
-		fmt.Println("cached", url)
-		return bytes.NewReader([]byte(res["content"]))
-	}
-
-	//_, err := os.Stat(cacheFile)
-	//if os.IsNotExist(err) {
-	//	fmt.Println("downloading")
-	//	resp, err := http.Get(url)
-	//	if err != nil {
-	//		fmt.Fprintf(os.Stderr, "did not fetch url")
-	//	}
-	//	f, err := os.Create(cacheFile)
-	//	check(err)
-	//	defer f.Close()
-	//	s, err := ioutil.ReadAll(resp.Body)
-	//	// this leaves `s` blank and a parsing function will have no input to process
-	//	f.WriteString(string(s))
-	//
-	//	defer resp.Body.Close()
-	//	return bytes.NewReader(s)
-	//
-	//} else {
-	//	fmt.Println("cached!")
-	//	data, err := ioutil.ReadFile(cacheFile)
-	//	check(err)
-	//	return bytes.NewReader(data)
-	//}
-
 }
 
 
@@ -118,11 +47,11 @@ func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []stri
 
 }
 
-func parseScoringTables(url string, c cache.DiskCache) map[int][][]string {
+func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 	//r, _ := regexp.Compile("[0-9]+")
 	//matchId := r.FindString(url)
 	//match := fetchUrl(homepage+url, matchId+".html")
-	match := fetchUrl(homepage+url, c)
+	match := common.FetchUrl(homepage+url, c)
 	matchDoc, _ := goquery.NewDocumentFromReader(match)
 
 	if len(Header) == 0 {
@@ -172,15 +101,12 @@ func getHeader(doc *goquery.Document) []string {
 
 }
 
-var Header = []string{}
-const homepage = "https://www.footywire.com/afl/footy/"
-
 
 func main() {
 	url := "https://www.footywire.com/afl/footy/ft_match_list"
-	c := cache.DiskCache{Dir: "F:/godata", Expires: time.Hour * 1}
+	c := common.DiskCache{Dir: "F:/godata", Expires: time.Hour * 1}
 
-	data := fetchUrl(url, c)
+	data := common.FetchUrl(url, c)
 	doc, err := goquery.NewDocumentFromReader(data)
 	check(err)
 	urls := parseSchedule(doc, time.Date(2021, 3, 18, 18, 0, 0, 0, time.UTC), time.Date(2021, 3, 20, 18, 0, 0, 0, time.UTC))

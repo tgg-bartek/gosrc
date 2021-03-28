@@ -123,11 +123,7 @@ func main() {
 			writer.Write(Header)
 		}
 		for _, tbl := range tables {
-
-			_ = writer.WriteAll(tbl)
-		time.Sleep(5 * time.Second)
-		}
-		//break
+			_ = writer.WriteAll(tbl)}
 	}
 	defer f.Close()
 }

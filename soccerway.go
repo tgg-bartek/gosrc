@@ -8,9 +8,11 @@ import (
 	"os"
 	"strings"
 	"time"
+	"flag"
 )
 
-
+// slice to be populated and reused during the program call
+// scoreboard header
 var Header = []string{}
 const homepage = "https://www.footywire.com/afl/footy/"
 
@@ -22,6 +24,7 @@ func check(e error) {
 }
 
 
+// parses year schedule from doc. limit output with date range (required)
 func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []string{
 	urls := []string{}
 	doc.Find("a").Each(func(_ int, s *goquery.Selection) {
@@ -42,15 +45,15 @@ func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []stri
 		if dateTime.After(start) && dateTime.Before(end) {
 			datesParsed = append(datesParsed, dateTime)
 		}
-		}
+	}
 	return urls[:len(datesParsed)]
 
 }
 
+// parses match scoreboard (player stats) for both teams.
 func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 	//r, _ := regexp.Compile("[0-9]+")
 	//matchId := r.FindString(url)
-	//match := fetchUrl(homepage+url, matchId+".html")
 	match := common.FetchUrl(homepage+url, c)
 	matchDoc, _ := goquery.NewDocumentFromReader(match)
 
@@ -85,6 +88,7 @@ func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 }
 
 
+// gets scoreboard header and input for the `header` global variable
 func getHeader(doc *goquery.Document) []string {
 	// input is match doc
 	tbl := doc.Find("table[width=\"823\"]").First()
@@ -102,17 +106,44 @@ func getHeader(doc *goquery.Document) []string {
 }
 
 
-func main() {
-	url := "https://www.footywire.com/afl/footy/ft_match_list"
-	c := common.DiskCache{Dir: "F:/godata", Expires: time.Hour * 1}
+// input date time in UTC (use date time same as footywire.com but a different format)
+func parseTime(ts string) time.Time {
+	layout := "2006-01-02 15:04"
+	d, _ := time.Parse(layout, ts)
+	return d
+}
 
-	data := common.FetchUrl(url, c)
+
+func main() {
+
+	// parse command line args
+	var start string
+	var end string
+	var path string
+
+	flag.StringVar(&start, "s", "start", "older end of time range YYY-mm-dd H:M")
+	flag.StringVar(&end, "e", "end", "newer end of time range YYY-mm-dd H:M")
+	flag.StringVar(&path, "p", "path", "file path to save data")
+	flag.Parse()
+
+	// scrape data
+	url := "https://www.footywire.com/afl/footy/ft_match_list"
+	c := common.DiskCache{Dir: "F:/godata", Expires: -1}
+	// schedule cache need to update while season is in progress
+	cSchedule := common.DiskCache{Dir: "F:/godata", Expires: time.Hour * 24}
+
+	data := common.FetchUrl(url, cSchedule)
 	doc, err := goquery.NewDocumentFromReader(data)
 	check(err)
-	urls := parseSchedule(doc, time.Date(2021, 3, 18, 18, 0, 0, 0, time.UTC), time.Date(2021, 3, 20, 18, 0, 0, 0, time.UTC))
+
+	urls := parseSchedule(doc, parseTime(start), parseTime(end))
 
 	//write data to csv
-	f, err := os.Create("footywire-week1.csv")
+	if path == "path" {
+		// flag was not passed, use default path
+		path ="footywire-week1.csv"
+	}
+	f, err := os.Create(path)
 	check(err)
 	writer := csv.NewWriter(f)
 

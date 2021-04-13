@@ -20,7 +20,7 @@ type DiskCache struct {
 }
 
 
-func urlToPath(_url string, cache DiskCache) string {
+func (cache DiskCache) urlToPath(_url string) string {
 	components, _ := url.Parse(_url)
 	fileName := components.Host + components.Path + components.RawQuery + components.Fragment
 	fileName = strings.ReplaceAll(fileName, "//", "/")
@@ -45,7 +45,7 @@ func urlToPath(_url string, cache DiskCache) string {
 }
 
 
-func hasExpired(timestamp time.Time, cache DiskCache) bool {
+func (cache DiskCache) hasExpired(timestamp time.Time) bool {
 	// return whether this timestamp has expires.
 	if cache.Expires == -1 {
 		return false
@@ -54,8 +54,8 @@ func hasExpired(timestamp time.Time, cache DiskCache) bool {
 
 }
 
-func Set(_url string, x string, cache DiskCache) {
-	filePath := urlToPath(_url, cache)
+func (cache DiskCache) SetCache(_url string, x string) {
+	filePath := cache.urlToPath(_url)
 	dir, _ := path.Split(filePath)
 	_, err := os.Stat(dir)
 	if os.IsNotExist(err) {
@@ -71,8 +71,8 @@ func Set(_url string, x string, cache DiskCache) {
 }
 
 
-func Get(_url string, cache DiskCache) map[string]string {
-	filePath := urlToPath(_url, cache)
+func (cache DiskCache) GetCache(_url string) map[string]string {
+	filePath := cache.urlToPath(_url)
 	_, err := os.Stat(filePath)
 	if os.IsNotExist(err) {
 		return	nil	// not found
@@ -81,7 +81,8 @@ func Get(_url string, cache DiskCache) map[string]string {
 	var dat map[string]string
 	json.Unmarshal(jdata, &dat)
 	ts, _ := time.Parse(time.RFC3339, dat["timestamp"])
-	if hasExpired(ts, cache) {
+	//if hasExpired(ts, cache) {
+	if cache.hasExpired(ts) {
 		return nil
 	}
 	return dat

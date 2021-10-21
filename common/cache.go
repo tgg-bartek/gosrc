@@ -1,4 +1,4 @@
-// disk common implementation for the internet
+// Package common: disk cache implementation for the internet
 package common
 
 import (
@@ -16,7 +16,7 @@ import (
 
 type DiskCache struct {
 	Dir string
-	Expires time.Duration  // set to -1 to never expire
+	Expires time.Duration  // set to -1 for expire never
 }
 
 

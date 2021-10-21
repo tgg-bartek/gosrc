@@ -1,0 +1,15 @@
+{
+  "link": "/api/v1/game/2012020660/feed/live",
+  "copyright": "NHL and the NHL Shield are registered trademarks of the National Hockey League. NHL and NHL team marks are the property of the NHL and its teams. © NHL 2021. All Rights Reserved.",
+  "gamePk": 2012020660,
+  "metaData": {
+    "wait": 10,
+    "timeStamp": "20170920_051603"
+  },
+  "gameData": {
+    "venue": {
+      "name": "Prudential Center",
+      "link": "/api/v1/venues/null"
+    }
+  }
+}

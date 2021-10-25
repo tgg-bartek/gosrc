@@ -4,26 +4,36 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-
-	//"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 )
 
 
+// FetchUrl fetches the content of specified URL
 func FetchUrl(_url string, c DiskCache) io.Reader {		// io.Reader or string
 	// check if cache exists
 	res := c.GetCache(_url)
 	if len(res) == 0 {
 		Throttle(5 * time.Second, _url)
 		fmt.Println("downloading...", _url)
-		resp, _ := http.Get(_url)
-		b, _ := ioutil.ReadAll(resp.Body)
+		resp, err := http.Get(_url)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
+			os.Exit(1)
+		}
+
+		b, err := ioutil.ReadAll(resp.Body)
+		defer resp.Body.Close()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "reading %s: %v", _url, err)
+			os.Exit(1)
+		}
+
 		s := string(b)
 		c.SetCache(_url, s)
-		defer resp.Body.Close()
 		return bytes.NewReader(b)
 		//return s	# string
 	} else {

@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"io"
+	"os"
 	"strings"
 )
 
@@ -32,4 +33,15 @@ func ReaderToString(stream io.Reader) string {
 		panic(err)
 	}
 	return string(b)
+}
+
+
+// FileExists: checks if file exists at path exists
+
+func FileExists(fp string) bool {
+	_, err := os.Stat(fp)
+	if os.IsNotExist(err) {
+		return false	// not found
+	}
+	return true		// file found
 }

@@ -16,7 +16,7 @@ import (
 
 type DiskCache struct {
 	Dir string
-	Expires time.Duration  // set to -1 for expire never
+	Expires time.Duration  // set -1 to expire never
 }
 
 

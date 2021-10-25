@@ -1,5 +1,5 @@
-// footywire.com data scraper (player data)
-// single schedule (year) supported only
+// Data scraper at footywire.com
+// single year supported only
 // saves data to CSV. supports command line arguments
 
 package main
@@ -18,11 +18,12 @@ import (
 
 
 const homepage = "https://www.footywire.com/afl/footy/"
-const cacheDir = "F:/godata"		// fixme update if needed
+const cacheDir = "F:/_data/godata"
 
-// Header slice to be populated and used during the program call
+// Header slice to be populated during the program call
 // scoreboard header
 var Header []string
+
 
 func check(e error) {
 	if e != nil {
@@ -32,7 +33,7 @@ func check(e error) {
 
 
 // parses year schedule from doc. limit output with date range (required)
-func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []string{
+func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []string {
 	var urls []string
 	doc.Find("a").Each(func(_ int, s *goquery.Selection) {
 		href, _ := s.Attr("href")
@@ -57,7 +58,7 @@ func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []stri
 
 }
 
-// parses match scoreboard (player stats) for both teams.
+// parses match scoreboard (player stats) both teams combined
 func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 	//r, _ := regexp.Compile("[0-9]+")
 	//matchId := r.FindString(url)
@@ -96,7 +97,7 @@ func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 }
 
 
-// gets scoreboard header and input for the `header` global variable
+// gets scoreboard header
 func getHeader(doc *goquery.Document) []string {
 	// input is match doc
 	tbl := doc.Find("table[width=\"823\"]").First()
@@ -167,7 +168,7 @@ func main() {
 	//write data to csv
 	if path == "path" {
 		// flag was not passed, use default path
-		path = "footywire-data.csv"
+		path = "data/.footywire/data.csv"
 	}
 	createDir(path)
 	f, err := os.Create(path)

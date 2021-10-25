@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"github.com/davecgh/go-spew/spew"
+
+	//"github.com/davecgh/go-spew/spew"
 	"fmt"
 	"github.com/tidwall/gjson"
 	//"gosrc/common"
@@ -32,8 +34,10 @@ func main() {
 	if err := json.Unmarshal(bytes, &x); err != nil {
 		panic(err)
 	}
-	spew.Dump(x)
-
+	spew.Dump(x.GameData.Players)
+	//for k := range x.GameData.Players {
+	//	fmt.Println(k)
+	//}
 }
 
 
@@ -42,12 +46,27 @@ type gameFile struct {
 	GamePk int `json:"gamePk"`
 	Link string `json:"link"`
 	MetaData metaData `json:"metaData"`
+	GameData gameData `json:"gameData"`
 }
 
 type metaData struct {
 	Wait int 	`json:"wait"`
 	Timestamp string `json:"timeStamp"`
 }
+
+type gameData struct {
+	Players map[string]player	`json:"players"`
+
+}
+
+type player struct {
+	Id int `json:"id"`
+	FullName string `json:"fullName"`
+	Link string `json:"link"`
+	Weight int `json:"weight"`
+	Rookie bool `json:"rookie"`
+}
+
 
 
 ///////////////////////////////////////////////////////////////////////////////

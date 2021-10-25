@@ -10,6 +10,56 @@
     "venue": {
       "name": "Prudential Center",
       "link": "/api/v1/venues/null"
+    },
+    "players": {
+      "ID8467412": {
+        "id": 8467412,
+        "fullName": "Alexei Ponikarovsky",
+        "link": "/api/v1/people/8467412",
+        "firstName": "Alexei",
+        "lastName": "Ponikarovsky",
+        "primaryNumber": "12",
+        "birthDate": "1980-04-09",
+        "birthCity": "Kiev",
+        "birthCountry": "UKR",
+        "nationality": "UKR",
+        "height": "6' 4\"",
+        "weight": 225,
+        "active": false,
+        "rookie": false,
+        "shootsCatches": "L",
+        "rosterStatus": "Y",
+        "primaryPosition": {
+          "code": "L",
+          "name": "Left Wing",
+          "type": "Forward",
+          "abbreviation": "LW"
+        }
+      },
+      "ID8468501": {
+        "id": 8468501,
+        "fullName": "Anton Volchenkov",
+        "link": "/api/v1/people/8468501",
+        "firstName": "Anton",
+        "lastName": "Volchenkov",
+        "primaryNumber": "20",
+        "birthDate": "1982-02-25",
+        "birthCity": "Moscow",
+        "birthCountry": "RUS",
+        "nationality": "RUS",
+        "height": "6' 1\"",
+        "weight": 220,
+        "active": false,
+        "rookie": false,
+        "shootsCatches": "L",
+        "rosterStatus": "Y",
+        "primaryPosition": {
+          "code": "D",
+          "name": "Defenseman",
+          "type": "Defenseman",
+          "abbreviation": "D"
+        }
+      }
     }
   }
 }

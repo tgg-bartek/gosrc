@@ -165,13 +165,13 @@ func main() {
 
 	urls := parseSchedule(doc, parseTime(start), parseTime(end))
 
-	//write data to csv
 	if path == "path" {
-		// flag was not passed, use default path
+		// flag was not provided, use default path
 		path = "data/.footywire/data.csv"
 	}
 	createDir(path)
 	f, err := os.Create(path)
+	defer f.Close()
 	check(err)
 	writer := csv.NewWriter(f)
 
@@ -187,5 +187,4 @@ func main() {
 		for _, tbl := range tables {
 			_ = writer.WriteAll(tbl)}
 	}
-	defer f.Close()
 }

@@ -14,7 +14,10 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"gosrc/common"
 	"os"
+	"regexp"
 	"strings"
+
+	//"strings"
 	"time"
 )
 
@@ -35,6 +38,7 @@ func check(e error) {
 
 
 func main() {
+
 
 	// Parse command line args
 	var (
@@ -57,6 +61,7 @@ func main() {
 	data := common.FetchUrl(url, cSchedule)
 	doc, err := goquery.NewDocumentFromReader(data)
 	check(err)
+
 	urls := parseSchedule(doc, parseTime(start), parseTime(end))
 	if path == "path" {
 		// flag was not provided, use default path
@@ -85,30 +90,33 @@ func main() {
 }
 
 
+func getYear(doc *goquery.Document) string {
+	yearTag := doc.Find("span[class=\"hltitle\"]")
+	r, _ := regexp.Compile("[0-9]+$")
+	val := r.FindString(yearTag.Text())
+	return val
+}
+
 
 // parses year schedule from doc. limit output with date range (required)
 func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []string {
+	y := getYear(doc)
+
+	layout := "Mon 2 Jan 3:04pm 2006"	// Thu 18 Mar 7:25pm
 	var urls []string
-	doc.Find("a").Each(func(_ int, s *goquery.Selection) {
+	doc.Find("td[id=\"contentpagecell\"]").Find("a[href*=\"match_statistics\"]").Each(func(_ int, s *goquery.Selection) {
 		href, _ := s.Attr("href")
-		if strings.Contains(href, "match_statistics") {
+		tr := s.Closest("tr")		// parent tr
+		timeString := tr.Find("td[height=\"24\"]").Text()
+		timeString = strings.Trim(timeString, "\xc2\xa0")
+		dateTime, err := time.Parse(layout, timeString + " " + y)
+		check(err)
+		// if url in date range, take
+		if dateTime.After(start) && dateTime.Before(end) {
 			urls = append(urls, href)
 		}
 	})
-	var dates []string
-	doc.Find("td[height=\"24\"]").Each(func(_ int, s *goquery.Selection) {
-		text := strings.Trim(s.Text(), " ")[2:]
-		dates = append(dates, text)
-	})
-	layout := "Mon 2 Jan 3:04pm 2006"	// Thu 18 Mar 7:25pm
-	var datesParsed []time.Time
-	for _, d := range dates[:len(urls)] {
-		dateTime, _ := time.Parse(layout, d + " 2021")
-		if dateTime.After(start) && dateTime.Before(end) {
-			datesParsed = append(datesParsed, dateTime)
-		}
-	}
-	return urls[:len(datesParsed)]
+	return urls
 
 }
 

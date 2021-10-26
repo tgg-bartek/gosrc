@@ -92,3 +92,13 @@ func (cache DiskCache) GetCache(_url string) map[string]string {
 	}
 	return dat
 }
+
+
+// DelCache Remove the value at this key
+func (cache DiskCache) DelCache(_url string) {
+	fp := cache.urlToPath(_url)
+	err := os.Remove(fp)
+	if err != nil {
+		return		// if path does not exist do nothing
+	}
+}

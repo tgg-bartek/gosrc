@@ -14,12 +14,15 @@ import (
 )
 
 
+// DiskCache struct interface that stores cached values in the file system
+// rather than in memory.
 type DiskCache struct {
-	Dir string
-	Expires time.Duration  // set -1 to expire never
+	Dir string				// the root level folder
+	Expires time.Duration   // Duration after cache entry expires, set -1 to never expire
 }
 
 
+// Create file system path for this URL
 func (cache DiskCache) urlToPath(_url string) string {
 	components, _ := url.Parse(_url)
 	fileName := components.Host + components.Path + components.RawQuery + components.Fragment
@@ -45,8 +48,9 @@ func (cache DiskCache) urlToPath(_url string) string {
 }
 
 
+// Return whether this timestamp has expired
 func (cache DiskCache) hasExpired(timestamp time.Time) bool {
-	// return whether this timestamp has expires.
+	// return whether this timestamp has expired
 	if cache.Expires == -1 {
 		return false
 	}
@@ -54,6 +58,7 @@ func (cache DiskCache) hasExpired(timestamp time.Time) bool {
 
 }
 
+// SetCache Save data to disk for this URL
 func (cache DiskCache) SetCache(_url string, x string) {
 	filePath := cache.urlToPath(_url)
 	dir, _ := path.Split(filePath)
@@ -70,7 +75,7 @@ func (cache DiskCache) SetCache(_url string, x string) {
 
 }
 
-
+// GetCache Load data from disk for this URL
 func (cache DiskCache) GetCache(_url string) map[string]string {
 	filePath := cache.urlToPath(_url)
 	_, err := os.Stat(filePath)

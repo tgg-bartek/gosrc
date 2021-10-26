@@ -1,6 +1,9 @@
-// Data scraper at footywire.com
-// single year supported only
-// saves data to CSV. supports command line arguments
+// Data scraper at footywire.com (Player Data)
+// single year supported only. supports disk cache.
+// saves data to CSV. supports command line arguments.
+// Example (command line):
+// go run footywire.go -s "2021-04-01 18:00" -e "2021-04-02 20:00" -p "data/footywire/week1.csv"
+// For datetime args use UTC tz in format Y-m-d H:M
 
 package main
 
@@ -11,17 +14,16 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"gosrc/common"
 	"os"
-	P "path"
 	"strings"
 	"time"
 )
 
 
+// Disk Cache constants
 const homepage = "https://www.footywire.com/afl/footy/"
 const cacheDir = "F:/_data/godata"
 
-// Header slice to be populated during the program call
-// scoreboard header
+// Header player stats header to be populated during the program call
 var Header []string
 
 
@@ -30,6 +32,58 @@ func check(e error) {
 		panic(e)
 	}
 }
+
+
+func main() {
+
+	// Parse command line args
+	var (
+		start string
+		end string
+		path string
+	)
+
+	flag.StringVar(&start, "s", "start", "older end of time range YYY-mm-dd H:M (use quotes)")
+	flag.StringVar(&end, "e", "end", "newer end of time range YYY-mm-dd H:M (use quotes)")
+	flag.StringVar(&path, "p", "path", "file path to save data")
+	flag.Parse()
+
+	// Scrape data
+	url := "https://www.footywire.com/afl/footy/ft_match_list"
+	c := common.DiskCache{Dir: cacheDir, Expires: -1}
+	// schedule cache need to update while season has not ended
+	cSchedule := common.DiskCache{Dir: cacheDir, Expires: time.Hour * 24}
+
+	data := common.FetchUrl(url, cSchedule)
+	doc, err := goquery.NewDocumentFromReader(data)
+	check(err)
+	urls := parseSchedule(doc, parseTime(start), parseTime(end))
+	if path == "path" {
+		// flag was not provided, use default path
+		path = "data/.footywire/data.csv"
+	}
+
+	// Write to CSV
+	common.CreateDir(path)
+	f, err := os.Create(path)
+	defer f.Close()
+	check(err)
+	writer := csv.NewWriter(f)
+
+	for nUrl, url := range urls {
+		fmt.Println("-->", url)
+		tables := parseScoringTables(url, c)
+		if nUrl == 0 {
+			err := writer.Write(Header)
+			check(err)
+		}
+		for _, tbl := range tables {
+			err = writer.WriteAll(tbl)
+			check(err)
+		}
+	}
+}
+
 
 
 // parses year schedule from doc. limit output with date range (required)
@@ -65,6 +119,7 @@ func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 	match := common.FetchUrl(homepage+url, c)
 	matchDoc, _ := goquery.NewDocumentFromReader(match)
 
+	// Populate Header for CSV output
 	if len(Header) == 0 {
 		Header = getHeader(matchDoc)
 	}
@@ -86,7 +141,6 @@ func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 				value := cell.Text()
 				rowData = append(rowData, value)
 			}
-
 			})
 			tableData = append(tableData, rowData)
 		})
@@ -115,76 +169,9 @@ func getHeader(doc *goquery.Document) []string {
 }
 
 
-// input date time in UTC (use date time same as footywire.com but a different format)
+// parses command line arg date time
 func parseTime(ts string) time.Time {
 	layout := "2006-01-02 15:04"
 	d, _ := time.Parse(layout, ts)
 	return d
-}
-
-
-// create directory if not exists
-func createDir(p string) {
-
-	dir, _ := P.Split(p)
-	if dir != "" {
-		_, err := os.Stat(dir)
-		if os.IsNotExist(err) {
-			err := os.MkdirAll(dir, os.ModePerm)
-			if err != nil {
-				return
-			}
-		}
-	}
-}
-
-// footywire.com data scraper
-// Download "player data" to CSV. Supports disk cache. Uses datetime range to limit output. Example:
-// -s "2021-04-01 18:00" -e "2021-04-02 20:00" -p "data/footywire/week1.csv"
-func main() {
-
-	// parse command line args
-	var start string
-	var end string
-	var path string
-
-	flag.StringVar(&start, "s", "start", "older end of time range YYY-mm-dd H:M (use quotes)")
-	flag.StringVar(&end, "e", "end", "newer end of time range YYY-mm-dd H:M (use quotes)")
-	flag.StringVar(&path, "p", "path", "file path to save data")
-	flag.Parse()
-
-	// scrape data
-	url := "https://www.footywire.com/afl/footy/ft_match_list"
-	c := common.DiskCache{Dir: cacheDir, Expires: -1}
-	// schedule cache need to update while season is in progress
-	cSchedule := common.DiskCache{Dir: cacheDir, Expires: time.Hour * 24}
-
-	data := common.FetchUrl(url, cSchedule)
-	doc, err := goquery.NewDocumentFromReader(data)
-	check(err)
-
-	urls := parseSchedule(doc, parseTime(start), parseTime(end))
-
-	if path == "path" {
-		// flag was not provided, use default path
-		path = "data/.footywire/data.csv"
-	}
-	createDir(path)
-	f, err := os.Create(path)
-	defer f.Close()
-	check(err)
-	writer := csv.NewWriter(f)
-
-	for nUrl, url := range urls {
-		fmt.Println("-->", url)
-		tables := parseScoringTables(url, c)
-		if nUrl == 0 {
-			err := writer.Write(Header)
-			if err != nil {
-				return
-			}
-		}
-		for _, tbl := range tables {
-			_ = writer.WriteAll(tbl)}
-	}
 }

@@ -5,40 +5,41 @@ package main
 
 
 import (
+	"encoding/csv"
+	"github.com/PuerkitoBio/goquery"
 	"regexp"
 	"strings"
 	//"fmt"
 	"gosrc/common"
-	"github.com/PuerkitoBio/goquery"
-	"encoding/csv"
 	"os"
 )
 
 const (
 	homepage = "https://www.sportsoddshistory.com/"
 	yearUrl = "https://www.sportsoddshistory.com/nfl-game-season/?y={year}"
+
 )
 
-var header = []string{"Year", "Week", "Round", "Day", "Date", "Time (ET)", "", "Favorite", "Score", "Spread", "", "Underdog", "Over/Under", "Notes"}
+var header = []string{"Year", "Week", "Round", "Day", "Date", "Time (ET)", "", "Favorite", "Score",
+                      "Spread", "", "Underdog", "Over/Under", "Notes"}
+var cache = common.DiskCache{Dir: "F:/_data/godata", Expires: -1}
 
 
 func main() {
 
-	cache := common.DiskCache{Dir: "F:/_data/godata", Expires: -1}
-	downloadSaveYear(1980, cache)	// save year sheet at data/
+	downloadSaveYear(1980)	// save year sheet at data/
 
 }
 
-
-func downloadSaveYear(year int, cache common.DiskCache) {
+// Download odds for single season (and save to a file)
+func downloadSaveYear(year int) {
 	url := common.FormatString(yearUrl, common.Template{"year": year})
-
-	doc := getDoc(url, cache)
+	doc := getDoc(url)
 	data := parseYearTables(doc)
 	toCsv(data, common.FormatString("data/{year}.csv", common.Template{"year": year}))
 }
 
-
+// Write data to CSV
 func toCsv(data [][][]string, path string) {
 	f, err := os.Create(path)
 	defer f.Close()
@@ -53,8 +54,8 @@ func toCsv(data [][][]string, path string) {
 	}
 }
 
-
-func getDoc(url string, cache common.DiskCache) *goquery.Document {
+// Get Document from URL
+func getDoc(url string) *goquery.Document {
 	reader := common.FetchUrl(url, cache)
 	doc, err := goquery.NewDocumentFromReader(reader)
 	if err != nil{

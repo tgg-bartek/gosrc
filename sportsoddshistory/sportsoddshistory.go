@@ -25,15 +25,17 @@ var header = []string{"Year", "Week", "Round", "Day", "Date", "Time (ET)", "", "
 func main() {
 
 	cache := common.DiskCache{Dir: "F:/_data/godata", Expires: -1}
+	downloadSaveYear(1980, cache)	// save year sheet at data/
 
-	url := common.FormatString(yearUrl, common.Template{"year": 1981})
+}
+
+
+func downloadSaveYear(year int, cache common.DiskCache) {
+	url := common.FormatString(yearUrl, common.Template{"year": year})
 
 	doc := getDoc(url, cache)
 	data := parseYearTables(doc)
-	//fmt.Print(len(data))
-
-	toCsv(data, "data/1981.csv")
-
+	toCsv(data, common.FormatString("data/{year}.csv", common.Template{"year": year}))
 }
 
 

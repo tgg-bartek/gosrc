@@ -26,7 +26,7 @@ type DiskCache struct {
 func (cache DiskCache) urlToPath(_url string) string {
 	components, _ := url.Parse(_url)
 	fileName := components.Host + components.Path + components.RawQuery + components.Fragment
-	fileName = strings.ReplaceAll(fileName, "//", "/")
+	fileName = strings.Replace(fileName, "//", "/", -1)
 
 	if strings.HasSuffix(fileName, "/") {
 		fileName += "index.html"
@@ -43,7 +43,7 @@ func (cache DiskCache) urlToPath(_url string) string {
 			fileNameFormatted += part + "/"
 		}
 	}
-	return strings.ReplaceAll(filepath.Join(cache.Dir, fileNameFormatted), "\\", "/")
+	return strings.Replace(filepath.Join(cache.Dir, fileNameFormatted), "\\", "/", -1)
 
 }
 

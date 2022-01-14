@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	P "path"
 	"strings"
@@ -29,7 +30,7 @@ func FormatString(s string, t Template) string {
 
 
 func ReaderToString(stream io.Reader) string {
-	b, err := io.ReadAll(stream)
+	b, err := ioutil.ReadAll(stream)
 	if err != nil {
 		panic(err)
 	}

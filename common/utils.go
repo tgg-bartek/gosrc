@@ -9,8 +9,6 @@ import (
 	"strings"
 )
 
-
-
 type Template map[string]interface{}
 
 // FormatString Python like string formatting with curly brackets {}
@@ -28,7 +26,6 @@ func FormatString(s string, t Template) string {
 	return strings.NewReplacer(args...).Replace(s)
 }
 
-
 func ReaderToString(stream io.Reader) string {
 	b, err := ioutil.ReadAll(stream)
 	if err != nil {
@@ -37,17 +34,15 @@ func ReaderToString(stream io.Reader) string {
 	return string(b)
 }
 
-
 // FileExists: checks if file exists at path exists
 
 func FileExists(fp string) bool {
 	_, err := os.Stat(fp)
 	if os.IsNotExist(err) {
-		return false	// not found
+		return false // not found
 	}
-	return true		// file found
+	return true // file found
 }
-
 
 // CreateDir creates directory (and sub dirs) if path does not exists
 func CreateDir(p string) {
@@ -62,4 +57,26 @@ func CreateDir(p string) {
 			}
 		}
 	}
+}
+
+// Inserting value to slice at index
+// 0 <= index <= len(a)
+// https://stackoverflow.com/a/61822301
+func Insert(a []string, index int, value string) []string {
+	if len(a) == index { // nil or empty slice or after last element
+		return append(a, value)
+	}
+	a = append(a[:index+1], a[index:]...) // index < len(a)
+	a[index] = value
+	return a
+}
+
+// contains checks if a string is present in a slice
+func Contains(s []string, str string) bool {
+	for _, v := range s {
+		if v == str {
+			return true
+		}
+	}
+	return false
 }

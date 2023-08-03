@@ -81,55 +81,55 @@ type Record struct {
 	Runners1DetailsRunnerId       float64 `parquet:"runners.1.details.runner.id"`
 	Runners1DetailsRunnerFullname string  `parquet:"runners.1.details.runner.fullName"`
 	Runners1DetailsPlayindex      float64 `parquet:"runners.1.details.playIndex"`
-	// Runners2MovementStart         string  `parquet:"runners.2.movement.start"`
-	// Runners2MovementEnd           string  `parquet:"runners.2.movement.end"`
-	// Runners2MovementOutnumber     float64 `parquet:"runners.2.movement.outNumber"`
-	// Runners2DetailsEventtype      string  `parquet:"runners.2.details.eventType"`
-	// Runners2DetailsRunnerId       float64 `parquet:"runners.2.details.runner.id"`
-	// Runners2DetailsRunnerFullname string  `parquet:"runners.2.details.runner.fullName"`
-	// Runners2DetailsPlayindex      float64 `parquet:"runners.2.details.playIndex"`
-	// Runners3MovementStart         string  `parquet:"runners.3.movement.start"`
-	// Runners3MovementEnd           string  `parquet:"runners.3.movement.end"`
-	// Runners3MovementOutnumber     float64 `parquet:"runners.3.movement.outNumber"`
-	// Runners3DetailsEventtype      string  `parquet:"runners.3.details.eventType"`
-	// Runners3DetailsRunnerId       float64 `parquet:"runners.3.details.runner.id"`
-	// Runners3DetailsRunnerFullname string  `parquet:"runners.3.details.runner.fullName"`
-	// Runners3DetailsPlayindex      float64 `parquet:"runners.3.details.playIndex"`
-	// Runners4MovementStart         string  `parquet:"runners.4.movement.start"`
-	// Runners4MovementEnd           string  `parquet:"runners.4.movement.end"`
-	// Runners4MovementOutnumber     float64 `parquet:"runners.4.movement.outNumber"`
-	// Runners4DetailsEventtype      string  `parquet:"runners.4.details.eventType"`
-	// Runners4DetailsRunnerId       float64 `parquet:"runners.4.details.runner.id"`
-	// Runners4DetailsRunnerFullname string  `parquet:"runners.4.details.runner.fullName"`
-	// Runners4DetailsPlayindex      float64 `parquet:"runners.4.details.playIndex"`
-	// Runners5MovementStart         string  `parquet:"runners.5.movement.start"`
-	// Runners5MovementEnd           string  `parquet:"runners.5.movement.end"`
-	// Runners5MovementOutnumber     float64 `parquet:"runners.5.movement.outNumber"`
-	// Runners5DetailsEventtype      string  `parquet:"runners.5.details.eventType"`
-	// Runners5DetailsRunnerId       float64 `parquet:"runners.5.details.runner.id"`
-	// Runners5DetailsRunnerFullname string  `parquet:"runners.5.details.runner.fullName"`
-	// Runners5DetailsPlayindex      float64 `parquet:"runners.5.details.playIndex"`
-	// Runners6MovementStart         string  `parquet:"runners.6.movement.start"`
-	// Runners6MovementEnd           string  `parquet:"runners.6.movement.end"`
-	// Runners6MovementOutnumber     float64 `parquet:"runners.6.movement.outNumber"`
-	// Runners6DetailsEventtype      string  `parquet:"runners.6.details.eventType"`
-	// Runners6DetailsRunnerId       float64 `parquet:"runners.6.details.runner.id"`
-	// Runners6DetailsRunnerFullname string  `parquet:"runners.6.details.runner.fullName"`
-	// Runners6DetailsPlayindex      float64 `parquet:"runners.6.details.playIndex"`
-	// Runners7MovementStart         string  `parquet:"runners.7.movement.start"`
-	// Runners7MovementEnd           string  `parquet:"runners.7.movement.end"`
-	// Runners7MovementOutnumber     string  `parquet:"runners.7.movement.outNumber"`
-	// Runners7DetailsEventtype      string  `parquet:"runners.7.details.eventType"`
-	// Runners7DetailsRunnerId       float64 `parquet:"runners.7.details.runner.id"`
-	// Runners7DetailsRunnerFullname string  `parquet:"runners.7.details.runner.fullName"`
-	// Runners7DetailsPlayindex      float64 `parquet:"runners.7.details.playIndex"`
+	Runners2MovementStart         string  `parquet:"runners.2.movement.start"`
+	Runners2MovementEnd           string  `parquet:"runners.2.movement.end"`
+	Runners2MovementOutnumber     float64 `parquet:"runners.2.movement.outNumber"`
+	Runners2DetailsEventtype      string  `parquet:"runners.2.details.eventType"`
+	Runners2DetailsRunnerId       float64 `parquet:"runners.2.details.runner.id"`
+	Runners2DetailsRunnerFullname string  `parquet:"runners.2.details.runner.fullName"`
+	Runners2DetailsPlayindex      float64 `parquet:"runners.2.details.playIndex"`
+	Runners3MovementStart         string  `parquet:"runners.3.movement.start"`
+	Runners3MovementEnd           string  `parquet:"runners.3.movement.end"`
+	Runners3MovementOutnumber     float64 `parquet:"runners.3.movement.outNumber"`
+	Runners3DetailsEventtype      string  `parquet:"runners.3.details.eventType"`
+	Runners3DetailsRunnerId       float64 `parquet:"runners.3.details.runner.id"`
+	Runners3DetailsRunnerFullname string  `parquet:"runners.3.details.runner.fullName"`
+	Runners3DetailsPlayindex      float64 `parquet:"runners.3.details.playIndex"`
+	Runners4MovementStart         string  `parquet:"runners.4.movement.start"`
+	Runners4MovementEnd           string  `parquet:"runners.4.movement.end"`
+	Runners4MovementOutnumber     float64 `parquet:"runners.4.movement.outNumber"`
+	Runners4DetailsEventtype      string  `parquet:"runners.4.details.eventType"`
+	Runners4DetailsRunnerId       float64 `parquet:"runners.4.details.runner.id"`
+	Runners4DetailsRunnerFullname string  `parquet:"runners.4.details.runner.fullName"`
+	Runners4DetailsPlayindex      float64 `parquet:"runners.4.details.playIndex"`
+	Runners5MovementStart         string  `parquet:"runners.5.movement.start"`
+	Runners5MovementEnd           string  `parquet:"runners.5.movement.end"`
+	Runners5MovementOutnumber     float64 `parquet:"runners.5.movement.outNumber"`
+	Runners5DetailsEventtype      string  `parquet:"runners.5.details.eventType"`
+	Runners5DetailsRunnerId       float64 `parquet:"runners.5.details.runner.id"`
+	Runners5DetailsRunnerFullname string  `parquet:"runners.5.details.runner.fullName"`
+	Runners5DetailsPlayindex      float64 `parquet:"runners.5.details.playIndex"`
+	Runners6MovementStart         string  `parquet:"runners.6.movement.start"`
+	Runners6MovementEnd           string  `parquet:"runners.6.movement.end"`
+	Runners6MovementOutnumber     float64 `parquet:"runners.6.movement.outNumber"`
+	Runners6DetailsEventtype      string  `parquet:"runners.6.details.eventType"`
+	Runners6DetailsRunnerId       float64 `parquet:"runners.6.details.runner.id"`
+	Runners6DetailsRunnerFullname string  `parquet:"runners.6.details.runner.fullName"`
+	Runners6DetailsPlayindex      float64 `parquet:"runners.6.details.playIndex"`
+	Runners7MovementStart         string  `parquet:"runners.7.movement.start"`
+	Runners7MovementEnd           string  `parquet:"runners.7.movement.end"`
+	// Runners7MovementOutnumber     float64 `parquet:"runners.7.movement.outNumber"`
+	Runners7DetailsEventtype      string  `parquet:"runners.7.details.eventType"`
+	Runners7DetailsRunnerId       float64 `parquet:"runners.7.details.runner.id"`
+	Runners7DetailsRunnerFullname string  `parquet:"runners.7.details.runner.fullName"`
+	Runners7DetailsPlayindex      float64 `parquet:"runners.7.details.playIndex"`
 	// Runners8MovementStart         string  `parquet:"runners.8.movement.start"`
-	// Runners8MovementEnd           string  `parquet:"runners.8.movement.end"`
-	// Runners8MovementOutnumber     string  `parquet:"runners.8.movement.outNumber"`
-	// Runners8DetailsEventtype      string  `parquet:"runners.8.details.eventType"`
-	// Runners8DetailsRunnerId       float64 `parquet:"runners.8.details.runner.id"`
-	// Runners8DetailsRunnerFullname string  `parquet:"runners.8.details.runner.fullName"`
-	// Runners8DetailsPlayindex      float64 `parquet:"runners.8.details.playIndex"`
+	Runners8MovementEnd string `parquet:"runners.8.movement.end"`
+	// Runners8MovementOutnumber     float64 `parquet:"runners.8.movement.outNumber"`
+	Runners8DetailsEventtype      string  `parquet:"runners.8.details.eventType"`
+	Runners8DetailsRunnerId       float64 `parquet:"runners.8.details.runner.id"`
+	Runners8DetailsRunnerFullname string  `parquet:"runners.8.details.runner.fullName"`
+	Runners8DetailsPlayindex      float64 `parquet:"runners.8.details.playIndex"`
 }
 
 func main() {
@@ -137,7 +137,8 @@ func main() {
 	f, _ := os.Open("C:\\Users\\bartek\\go\\src\\gosrc\\data\\pbp-2015.parquet")
 	// Now, we can read from the file.
 	pf := parquet.NewReader(f)
-	records := make([]Record, 0)
+	// records := make([]Record, 0)
+	count := 0
 	for {
 		var rec Record
 		err := pf.Read(&rec)
@@ -147,10 +148,13 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		records = append(records, rec)
-	}
-	for _, r := range records[:3] {
-		fmt.Println(r)
+		// records = append(records, rec)
+
+		if count == 3 {
+			break
+		}
+		fmt.Println(rec)
+		count += 1
 
 	}
 

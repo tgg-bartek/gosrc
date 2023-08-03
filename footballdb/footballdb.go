@@ -115,7 +115,7 @@ func parseTeamStats(c *colly.Collector, gameUrl string) [][]string {
 	c.OnHTML("div#divBox_team table", func(t *colly.HTMLElement) {
 		header := []string{}
 		t.ForEach("thead td span.hidden-xs", func(i int, td *colly.HTMLElement) {
-			if 1 > 0 {
+			if i > 0 {
 				if td.Text != "" {
 					header = append(header, td.Text)
 				}

@@ -3,12 +3,13 @@
 
 package main
 
-
 import (
 	"encoding/csv"
-	"github.com/PuerkitoBio/goquery"
 	"regexp"
 	"strings"
+
+	"github.com/PuerkitoBio/goquery"
+
 	//"fmt"
 	"gosrc/common"
 	"os"
@@ -16,18 +17,20 @@ import (
 
 const (
 	homepage = "https://www.sportsoddshistory.com/"
-	yearUrl = "https://www.sportsoddshistory.com/nfl-game-season/?y={year}"
-
+	yearUrl  = "https://www.sportsoddshistory.com/nfl-game-season/?y={year}"
 )
 
 var header = []string{"Year", "Week", "Round", "Day", "Date", "Time (ET)", "", "Favorite", "Score",
-                      "Spread", "", "Underdog", "Over/Under", "Notes"}
+	"Spread", "", "Underdog", "Over/Under", "Notes"}
 var cache = common.DiskCache{Dir: "F:/_data/godata", Expires: -1}
-
 
 func main() {
 
-	downloadSaveYear(1980)	// save year sheet at data/
+	// for i := 1971; i < 2010; i++ {
+	// 	downloadSaveYear(i) // save year sheet at data/
+	// 	time.Sleep(time.Minute * 3)
+	// }
+	// downloadSaveYear(1978)
 
 }
 
@@ -36,7 +39,7 @@ func downloadSaveYear(year int) {
 	url := common.FormatString(yearUrl, common.Template{"year": year})
 	doc := getDoc(url)
 	data := parseYearTables(doc)
-	toCsv(data, common.FormatString("data/{year}.csv", common.Template{"year": year}))
+	toCsv(data, common.FormatString("data/sportsoddshistory/{year}.csv", common.Template{"year": year}))
 }
 
 // Write data to CSV
@@ -58,14 +61,14 @@ func toCsv(data [][][]string, path string) {
 func getDoc(url string) *goquery.Document {
 	reader := common.FetchUrl(url, cache)
 	doc, err := goquery.NewDocumentFromReader(reader)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 	return doc
 
 }
 
-func parseYearTables(doc *goquery.Document) [][][]string  {		// map[int][][]string
+func parseYearTables(doc *goquery.Document) [][][]string { // map[int][][]string
 	//var data = make(map[int][][]string)
 	var data [][][]string
 	doc.Find("table[class=\"soh1\"]").Each(func(n int, tbl *goquery.Selection) {
@@ -101,7 +104,7 @@ func parseTable(tbl *goquery.Selection) [][]string {
 			var rowData []string
 			rowData = append(rowData, year, cleanWeek(week))
 			if cleanWeek(week) != "Playoffs" {
-				rowData = append(rowData, "")	// placeholder for non playoffs weeks
+				rowData = append(rowData, "") // placeholder for non playoffs weeks
 			}
 			tr.Find("td").Each(func(_ int, td *goquery.Selection) {
 				value := td.Text()

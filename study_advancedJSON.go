@@ -3,16 +3,15 @@
 
 package main
 
-
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	"github.com/davecgh/go-spew/spew"
 )
 
-
-func main() {
+func main2() {
 	// --- Marshaling JSON
 	// Marshal returns the JSON encoding of v
 	//marshalJson1()
@@ -41,7 +40,6 @@ func main() {
 // b. object or array of objects: {...} vs [{...}, {...}]
 // c. input may be success or an error: {"success": true, "results": [...]} vs {"success": false, "error": "..."}
 
-
 /////////////////////////////////////////////////
 // --- Dealing with case C: Unknown types
 
@@ -56,7 +54,7 @@ type Success struct {
 }
 
 type Error struct {
-	Error string `json:"error"`
+	Error  string `json:"error"`
 	Reason string `json:"reason"`
 }
 
@@ -92,7 +90,7 @@ type Response struct {
   }
  }
 }
- */
+*/
 
 func unmarshalUnknownTypes() {
 	data := []byte(`[
@@ -111,7 +109,7 @@ func unmarshalUnknownTypes() {
 // Failure: {"status": "not found", "reason": "The requested..."}
 
 type Success2 struct {
-	Status string `json:"status"`
+	Status  string   `json:"status"`
 	Results []string `json:"results"`
 }
 
@@ -166,7 +164,7 @@ func (r *Response2) UnmarshalJSON(d []byte) error {
  }
 }
 
- */
+*/
 func unmarshalUnknownTypes2() {
 	data := []byte(`[
 		{"status": "ok", "results": ["one", "two"]},
@@ -179,7 +177,6 @@ func unmarshalUnknownTypes2() {
 	spew.Dump(x)
 }
 
-
 /////////////////////////////////////////////////
 // --- Dealing with case B: Array or single element
 
@@ -188,22 +185,20 @@ func unmarshalUnknownTypes2() {
 
 type SliceOrString []string
 
-
 func (s *SliceOrString) UnmarshalJSON(d []byte) error {
 	if d[0] == '"' {
 		var v string
 		err := json.Unmarshal(d, &v)
 		fmt.Println("String ->", v)
-		*s = SliceOrString{v}	// makes v an elem of slice SliceOrString (not to confuse with type conversion ())
+		*s = SliceOrString{v} // makes v an elem of slice SliceOrString (not to confuse with type conversion ())
 		return err
 	}
 	var v []string
 	err := json.Unmarshal(d, &v)
-	*s = v  // or SliceOrString(v) <- () converts v to SliceOrString but is not needed here
+	*s = v // or SliceOrString(v) <- () converts v to SliceOrString but is not needed here
 	fmt.Println("Array ->", v)
 	return err
 }
-
 
 func unmarshalSliceOrString() {
 	data := []byte(`["one", ["two", "elements"]]`)
@@ -211,9 +206,8 @@ func unmarshalSliceOrString() {
 	if err := json.Unmarshal(data, &x); err != nil {
 		panic(err)
 	}
-	fmt.Println(x)  // eg x[0]
+	fmt.Println(x) // eg x[0]
 }
-
 
 /////////////////////////////////////////////////
 // --- Dealing with case A: Number vs String
@@ -232,7 +226,6 @@ func (i *IntOrString) UnmarshalJSON(d []byte) error {
 	return err
 }
 
-
 func unmarshalIntOrString() {
 	data := []byte(`[123, "321"]`)
 	x := make([]IntOrString, 0)
@@ -242,15 +235,14 @@ func unmarshalIntOrString() {
 	fmt.Println(x)
 }
 
-
 /////////////////////////////////////////////////
 
 func unmarshalJson2() {
 	type person struct {
-		Name string `json:"name"`
-		Age int `json:"age"`
+		Name        string `json:"name"`
+		Age         int    `json:"age"`
 		Description string `json:"desc,omitempty"`
-		secret string  // Unexported fields are never (un)marshalled
+		secret      string // Unexported fields are never (un)marshalled
 	}
 	data := []byte(`{"name": "Jeo", "age": 32, "desc": "Python Programmer"}`)
 	var x person
@@ -259,7 +251,6 @@ func unmarshalJson2() {
 	fmt.Println(x)
 
 }
-
 
 func unmarshalJson1() {
 	data := []byte(`{"foo": "bar"}`)
@@ -270,17 +261,16 @@ func unmarshalJson1() {
 
 }
 
-
-func marshalJson2(){
+func marshalJson2() {
 	type person struct {
-		Name string `json:"name"`
-		Age int `json:"age"`
+		Name        string `json:"name"`
+		Age         int    `json:"age"`
 		Description string `json:"desc,omitempty"`
-		secret	string  // Unexported fields are never (un)marshaled
+		secret      string // Unexported fields are never (un)marshaled
 	}
 	x := person{
-		Name: "Bob",
-		Age: 32,
+		Name:   "Bob",
+		Age:    32,
 		secret: "Shhh!",
 	}
 	data, _ := json.Marshal(x)
@@ -288,8 +278,7 @@ func marshalJson2(){
 
 }
 
-
-func marshalJson1(){
+func marshalJson1() {
 	x := map[string]string{
 		"foo": "bar",
 	}

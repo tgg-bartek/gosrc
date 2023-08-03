@@ -11,14 +11,14 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
-	"github.com/PuerkitoBio/goquery"
 	"gosrc/common"
 	"os"
 	"regexp"
 	"strings"
 	"time"
-)
 
+	"github.com/PuerkitoBio/goquery"
+)
 
 // Disk Cache constants
 const homepage = "https://www.footywire.com/afl/footy/"
@@ -27,22 +27,19 @@ const cacheDir = "F:/_data/godata"
 // Header player stats header to be populated during the program call
 var Header []string
 
-
 func check(e error) {
 	if e != nil {
 		panic(e)
 	}
 }
 
-
 func main() {
-
 
 	// Parse command line args
 	var (
 		start string
-		end string
-		path string
+		end   string
+		path  string
 	)
 
 	flag.StringVar(&start, "s", "start", "older end of time range YYY-mm-dd H:M (use quotes)")
@@ -87,7 +84,6 @@ func main() {
 	}
 }
 
-
 func getYear(doc *goquery.Document) string {
 	yearTag := doc.Find("span[class=\"hltitle\"]")
 	r, _ := regexp.Compile("[0-9]+$")
@@ -95,19 +91,18 @@ func getYear(doc *goquery.Document) string {
 	return val
 }
 
-
 // parses year schedule from doc. limit output with date range (required)
 func parseSchedule(doc *goquery.Document, start time.Time, end time.Time) []string {
 	y := getYear(doc)
 
-	layout := "Mon 2 Jan 3:04pm 2006"	// Thu 18 Mar 7:25pm
+	layout := "Mon 2 Jan 3:04pm 2006" // Thu 18 Mar 7:25pm
 	var urls []string
 	doc.Find("td[id=\"contentpagecell\"]").Find("a[href*=\"match_statistics\"]").Each(func(_ int, s *goquery.Selection) {
 		href, _ := s.Attr("href")
-		tr := s.Closest("tr")		// parent tr
+		tr := s.Closest("tr") // parent tr
 		timeString := tr.Find("td[height=\"24\"]").Text()
 		timeString = strings.Trim(timeString, "\xc2\xa0")
-		dateTime, err := time.Parse(layout, timeString + " " + y)
+		dateTime, err := time.Parse(layout, timeString+" "+y)
 		check(err)
 		// if url in date range, take
 		if dateTime.After(start) && dateTime.Before(end) {
@@ -138,15 +133,15 @@ func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 			var rowData []string
 			row := td.Parent()
 			row.Find("td").Each(func(nCell int, cell *goquery.Selection) {
-			switch nCell {
-			case 0:
-				href, _ := cell.Find("a").Attr("href")
-				value := cell.Text()
-				rowData = append(rowData, href, value)
-			default:
-				value := cell.Text()
-				rowData = append(rowData, value)
-			}
+				switch nCell {
+				case 0:
+					href, _ := cell.Find("a").Attr("href")
+					value := cell.Text()
+					rowData = append(rowData, href, value)
+				default:
+					value := cell.Text()
+					rowData = append(rowData, value)
+				}
 			})
 			tableData = append(tableData, rowData)
 		})
@@ -155,7 +150,6 @@ func parseScoringTables(url string, c common.DiskCache) map[int][][]string {
 	return tables
 
 }
-
 
 // gets scoreboard header
 func getHeader(doc *goquery.Document) []string {
@@ -173,7 +167,6 @@ func getHeader(doc *goquery.Document) []string {
 	return header
 
 }
-
 
 // parses command line arg date time
 func parseTime(ts string) time.Time {

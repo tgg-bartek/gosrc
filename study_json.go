@@ -3,8 +3,10 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/davecgh/go-spew/spew"
 	"github.com/tidwall/gjson"
+
 	//"gosrc/common"
 	"os"
 	"time"
@@ -17,8 +19,7 @@ import (
 //
 //var gameUrl = "https://statsapi.web.nhl.com/api/v1/game/{gameId}/feed/live"
 
-
-func main() {
+func main3() {
 	//--- JSON Input
 	//url := common.FormatString(gameUrl, common.Template{"gameId": "2012020660"})
 	//stream := common.FetchUrl(url, cache)
@@ -37,43 +38,37 @@ func main() {
 	//}
 }
 
-
 type gameFile struct {
-	Copyright string `json:"copyright"`
-	GamePk int `json:"gamePk"`
-	Link string `json:"link"`
-	MetaData metaData `json:"metaData"`
-	GameData gameData `json:"gameData"`
+	Copyright string   `json:"copyright"`
+	GamePk    int      `json:"gamePk"`
+	Link      string   `json:"link"`
+	MetaData  metaData `json:"metaData"`
+	GameData  gameData `json:"gameData"`
 }
 
 type metaData struct {
-	Wait int 	`json:"wait"`
+	Wait      int    `json:"wait"`
 	Timestamp string `json:"timeStamp"`
 }
 
 type gameData struct {
-	Players map[string]player	`json:"players"`
-
+	Players map[string]player `json:"players"`
 }
 
 type player struct {
-	Id int `json:"id"`
+	Id       int    `json:"id"`
 	FullName string `json:"fullName"`
-	Link string `json:"link"`
-	Weight int `json:"weight"`
-	Rookie bool `json:"rookie"`
+	Link     string `json:"link"`
+	Weight   int    `json:"weight"`
+	Rookie   bool   `json:"rookie"`
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////
-
 
 func gjsonExample(s string) {
 	value := gjson.Get(s, "gameData.game")
 	fmt.Println(value)
 }
-
 
 func chanExample() {
 	c := make(chan string)
@@ -89,13 +84,8 @@ func getTextPol(c chan string) {
 	c <- string(text)
 }
 
-
 func getTextEng(c chan string) {
 	text, _ := os.ReadFile("data/english.txt")
 	time.Sleep(time.Millisecond * 100)
 	c <- string(text)
 }
-
-
-
-

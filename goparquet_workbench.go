@@ -1,6 +1,8 @@
 package main
 
-// https://github.com/parquet-go/parquet-go/blob/main/example_test.go
+// Dependency:
+// go install github.com/parquet-go/parquet-go
+// Example: https://github.com/parquet-go/parquet-go/blob/main/example_test.go
 
 import (
 	"fmt"
@@ -150,7 +152,7 @@ func main() {
 		}
 		// records = append(records, rec)
 
-		if count == 3 {
+		if count == 5 {
 			break
 		}
 		fmt.Println(rec)

@@ -41,10 +41,13 @@ type Record struct {
 	MatchupPitcherFullname        string  `parquet:"matchup.pitcher.fullName"`
 	MatchupPitchhandCode          string  `parquet:"matchup.pitchHand.code"`
 	DetailsDescription            string  `parquet:"details.description"`
-	DetailsIsstrike               bool    `parquet:"details.isStrike"`
-	DetailsIsball                 bool    `parquet:"details.isBall"`
-	DetailsIsscoringplay          bool    `parquet:"details.isScoringPlay"`
+	DetailsIsstrike               string  `parquet:"details.isStrike"`
+	DetailsIsball                 string  `parquet:"details.isBall"`
+	DetailsIsscoringplay          string  `parquet:"details.isScoringPlay"`
 	DetailsTypeDescription        string  `parquet:"details.type.description"`
+	Pitchnumber                   float64 `parquet:"pitchNumber"`
+	Ispitch                       string  `parquet:"isPitch"`
+	Type                          string  `parquet:"type"`
 	CountBalls                    float64 `parquet:"count.balls"`
 	CountStrikes                  float64 `parquet:"count.strikes"`
 	CountOuts                     float64 `parquet:"count.outs"`
@@ -63,9 +66,6 @@ type Record struct {
 	PitchdataCoordinatesX         float64 `parquet:"pitchData.coordinates.x"`
 	PitchdataCoordinatesY         float64 `parquet:"pitchData.coordinates.y"`
 	PitchdataZone                 float64 `parquet:"pitchData.zone"`
-	Pitchnumber                   float64 `parquet:"pitchNumber"`
-	Ispitch                       bool    `parquet:"isPitch"`
-	Type                          string  `parquet:"type"`
 	HitdataTrajectory             string  `parquet:"hitData.trajectory"`
 	HitdataHardness               string  `parquet:"hitData.hardness"`
 	HitdataCoordinatesCoordx      float64 `parquet:"hitData.coordinates.coordX"`

@@ -121,14 +121,14 @@ type Record struct {
 	Runners6DetailsPlayindex      float64 `parquet:"runners.6.details.playIndex"`
 	Runners7MovementStart         string  `parquet:"runners.7.movement.start"`
 	Runners7MovementEnd           string  `parquet:"runners.7.movement.end"`
-	// Runners7MovementOutnumber     float64 `parquet:"runners.7.movement.outNumber"`
+	Runners7MovementOutnumber     float64 `parquet:"runners.7.movement.outNumber"`
 	Runners7DetailsEventtype      string  `parquet:"runners.7.details.eventType"`
 	Runners7DetailsRunnerId       float64 `parquet:"runners.7.details.runner.id"`
 	Runners7DetailsRunnerFullname string  `parquet:"runners.7.details.runner.fullName"`
 	Runners7DetailsPlayindex      float64 `parquet:"runners.7.details.playIndex"`
-	// Runners8MovementStart         string  `parquet:"runners.8.movement.start"`
-	Runners8MovementEnd string `parquet:"runners.8.movement.end"`
-	// Runners8MovementOutnumber     float64 `parquet:"runners.8.movement.outNumber"`
+	Runners8MovementStart         string  `parquet:"runners.8.movement.start"`
+	Runners8MovementEnd           string  `parquet:"runners.8.movement.end"`
+	Runners8MovementOutnumber     float64 `parquet:"runners.8.movement.outNumber"`
 	Runners8DetailsEventtype      string  `parquet:"runners.8.details.eventType"`
 	Runners8DetailsRunnerId       float64 `parquet:"runners.8.details.runner.id"`
 	Runners8DetailsRunnerFullname string  `parquet:"runners.8.details.runner.fullName"`
@@ -137,8 +137,7 @@ type Record struct {
 
 func main() {
 
-	f, _ := os.Open("C:\\Users\\bartek\\go\\src\\gosrc\\data\\pbp-2015.parquet")
-	// Now, we can read from the file.
+	f, _ := os.Open("C:\\Users\\bartek\\go\\src\\gosrc\\data\\pbp-2017.parquet")
 	pf := parquet.NewReader(f)
 	// records := make([]Record, 0)
 	count := 0

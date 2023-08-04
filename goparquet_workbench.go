@@ -1,8 +1,7 @@
-package main
-
 // Dependency:
 // go install github.com/parquet-go/parquet-go
-// Example: https://github.com/parquet-go/parquet-go/blob/main/example_test.go
+
+package main
 
 import (
 	"fmt"
@@ -13,6 +12,8 @@ import (
 	"github.com/parquet-go/parquet-go"
 )
 
+// Comment out columns without a single value (all NaNs)
+// or the code will break
 type Record struct {
 	GidMlb                        int64   `parquet:"gid_mlb"`
 	GidRef                        string  `parquet:"gid_ref"`

@@ -152,7 +152,7 @@ func main() {
 		}
 		// records = append(records, rec)
 
-		if count == 5 {
+		if count == 3 {
 			break
 		}
 		fmt.Println(rec)
